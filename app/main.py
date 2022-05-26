@@ -38,6 +38,15 @@ def read_root():
 
 @app.post("/user", response_model=schemas.Users)
 def create_user(user: schemas.Users, db: Session = Depends(get_db)):
+    """Send a request to create a user.
+
+    Args:
+        user (schemas.Users): pydantic user class
+        db (Session, optional): sqlalchemy local session. Defaults to Depends(get_db).
+
+    Returns:
+        _type_: pydantic user class
+    """
     # if not validators.url(url.target_url):
     #     raise_bad_request(message="Your provided URL is not valid")
 
@@ -46,3 +55,19 @@ def create_user(user: schemas.Users, db: Session = Depends(get_db)):
     # db_url.admin_url = db_url.secret_key
 
     return db_user
+
+
+@app.get("/users")
+def get_users(db: Session = Depends(get_db)):
+
+    result = db.query(models.Users)
+    users = result.all()
+
+    json_data = {}
+    for user in users:
+        log.info(vars(user))
+        json_data[user.user_name] = {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+        }
+    return json_data
