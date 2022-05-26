@@ -11,3 +11,6 @@ class Users(BaseModel):
     user_name: str
     first_name: str
     last_name: str
+
+    class Config:
+        orm_mode = True

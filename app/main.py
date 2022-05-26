@@ -15,7 +15,12 @@ logging.basicConfig(
 )
 
 log = logging.getLogger(__name__)
+
+# Start API
 app = FastAPI()
+
+# Create SQLlite database
+models.Base.metadata.create_all(bind=engine)
 
 
 def get_db():
@@ -40,4 +45,4 @@ def create_user(user: schemas.Users, db: Session = Depends(get_db)):
     # db_url.url = db_url.key
     # db_url.admin_url = db_url.secret_key
 
-    return db_url
+    return db_user
